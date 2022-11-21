@@ -1,0 +1,97 @@
+name: CI
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+    - 'README.md'
+    - '.gitignore'
+    - .github/workflows/release.yml
+
+jobs:
+  Tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            venv-activate: .venv\Scripts\activate
+            name: Windows
+          - os: ubuntu-latest
+            venv-activate: source .venv/bin/activate
+            name: Linux
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install virtualenv
+        run: |
+          python -m venv .venv
+          ${{ matrix.venv-activate }}
+          pip install -r requirements.txt
+      - name: Run python unittest
+        run: |
+          ${{ matrix.venv-activate }}
+          python -m unittest tests.py
+
+  Package:
+    needs: [Tests]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            venv-activate: .venv\Scripts\activate
+            name: Windows
+            binary: dist/bera-dl.exe
+          - os: ubuntu-latest
+            venv-activate: source .venv/bin/activate
+            name: Linux
+            binary: dist/bera-dl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install virtualenv
+        run: |
+          python -m venv .venv
+          ${{ matrix.venv-activate }}
+          pip install -r requirements.txt
+      - name: PyInstaller
+        run: |
+          ${{ matrix.venv-activate }}
+          pyinstaller --onefile --name bera-dl --paths .venv/Lib/site-packages main.py
+      - name: Binary artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.name }}-binary
+          path: ${{ matrix.binary }}
+
+  Release:
+    if: (github.ref_name == 'master') && (contains(github.event.head_commit.message, '[release]'))
+    needs: [Package]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Windows binaries artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: Windows-binary
+        path: binaries/windows
+
+    - name: Download Linux binaries artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: Linux-binary
+        path: binaries/linux
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ github.event.head_commit.message }}
+        tag_name: release
+        files: |
+          binaries/linux/bera-dl
+          binaries/windows/bera-dl.exe
+        fail_on_unmatched_files: true
