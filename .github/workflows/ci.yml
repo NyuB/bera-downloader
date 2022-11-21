@@ -6,7 +6,6 @@ on:
     paths-ignore:
     - 'README.md'
     - '.gitignore'
-    - .github/workflows/release.yml
 
 jobs:
   Tests:
