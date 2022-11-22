@@ -4,7 +4,7 @@ import typer
 import sys
 
 class MassifArgument(Enum):
-    ARRAVIS = "ARRAVIS"
+    ARAVIS = "ARAVIS"
     BELLEDONNE = "BELLEDONNE"
     CHARTREUSE = "CHARTREUSE"
     OISANS = "OISANS"

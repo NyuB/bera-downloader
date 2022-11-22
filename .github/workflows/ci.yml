@@ -115,7 +115,7 @@ jobs:
           MONTH=${{ steps.dates.outputs.month }}
           DAY=${{ steps.dates.outputs.day }}
           DATE_SUFFIX=${YEAR}-${MONTH}-${DAY}
-          binaries/linux/bera-dl ARRAVIS $YEAR $MONTH $DAY --output-name Arravis-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl ARAVIS $YEAR $MONTH $DAY --output-name Arravis-${DATE_SUFFIX}.pdf
           binaries/linux/bera-dl BELLEDONNE $YEAR $MONTH $DAY --output-name Belledonne-${DATE_SUFFIX}.pdf
           binaries/linux/bera-dl CHARTREUSE $YEAR $MONTH $DAY --output-name Chartreuse-${DATE_SUFFIX}.pdf
           binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${DATE_SUFFIX}.pdf
