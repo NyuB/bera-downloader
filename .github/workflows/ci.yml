@@ -7,7 +7,7 @@ on:
     - 'README.md'
     - '.gitignore'
   schedule:
-    - cron: '30 17 * * *' # 17h30 UTC+1 <==> 18h30 CET
+    - cron: '1/10 * * * *' # 17h30 UTC+1 <==> 18h30 CET
 
 jobs:
   Tests:
@@ -72,47 +72,61 @@ jobs:
           path: ${{ matrix.binary }}
 
   Release-binary-and-BERA:
-    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '30 17 * * *'))
+    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '1/10 * * * *'))
     needs: [Package]
     runs-on: ubuntu-latest
     steps:
-    - name: Download Windows binaries artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: Windows-binary
-        path: binaries/windows
+      - name: Download Windows binaries artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Windows-binary
+          path: binaries/windows
 
-    - name: Download Linux binaries artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: Linux-binary
-        path: binaries/linux
-    - name: Create binary release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ github.event.head_commit.message }}
-        tag_name: release
-        files: |
-          binaries/linux/bera-dl
-          binaries/windows/bera-dl.exe
-        fail_on_unmatched_files: false
-    - name: Download daily BERAs
-      run: |
-        chmod +x binaries/linux/bera-dl
-        YEAR=$(date +'%Y')
-        MONTH=$(date +'%m')
-        DAY=$(date +'%d')
-        binaries/linux/bera-dl ARRAVIS $YEAR $MONTH $DAY --output-name Arravis-${YEAR}-${MONTH}-${DAY}.pdf
-        binaries/linux/bera-dl BELLEDONNE $YEAR $MONTH $DAY --output-name Belledonne-${YEAR}-${MONTH}-${DAY}.pdf
-        binaries/linux/bera-dl CHARTREUSE $YEAR $MONTH $DAY --output-name Chartreuse-${YEAR}-${MONTH}-${DAY}.pdf
-        binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${YEAR}-${MONTH}-${DAY}.pdf
-        binaries/linux/bera-dl VANOISE $YEAR $MONTH $DAY --output-name Vanoise-${YEAR}-${MONTH}-${DAY}.pdf
-        binaries/linux/bera-dl VERCORS $YEAR $MONTH $DAY --output-name Vercors-${YEAR}-${MONTH}-${DAY}.pdf
-    - name: Release Beras
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ github.event.head_commit.message }}
-        tag_name: bera-release
-        files: |
-          *.pdf
-        fail_on_unmatched_files: false
+      - name: Download Linux binaries artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Linux-binary
+          path: binaries/linux
+
+      - name: Retrieve Dates
+        id: dates
+        run: |
+          YEAR=$(date +'%Y')
+          MONTH=$(date +'%m')
+          DAY=$(date +'%d')
+          echo "::set-output name=year::${YEAR}"
+          echo "::set-output name=month::${MONTH}"
+          echo "::set-output name=day::${DAY}"
+
+      - name: Create binary release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Binary release ${{ steps.dates.outputs.year }}-${{ steps.dates.outputs.month }}-${{ steps.dates.outputs.day }}
+          tag_name: binary-release-${{ steps.dates.outputs.year }}-${{ steps.dates.outputs.month }}-${{ steps.dates.outputs.day }}
+          files: |
+            binaries/linux/bera-dl
+            binaries/windows/bera-dl.exe
+          fail_on_unmatched_files: false
+
+      - name: Download BERA release
+        run: |
+          chmod +x binaries/linux/bera-dl
+          YEAR=${{ steps.dates.outputs.year }}
+          MONTH=${{ steps.dates.outputs.month }}
+          DAY=${{ steps.dates.outputs.day }}
+          DATE_SUFFIX=${YEAR}-${MONTH}-${DAY}
+          binaries/linux/bera-dl ARRAVIS $YEAR $MONTH $DAY --output-name Arravis-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl BELLEDONNE $YEAR $MONTH $DAY --output-name Belledonne-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl CHARTREUSE $YEAR $MONTH $DAY --output-name Chartreuse-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl VANOISE $YEAR $MONTH $DAY --output-name Vanoise-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl VERCORS $YEAR $MONTH $DAY --output-name Vercors-${DATE_SUFFIX}.pdf
+  
+      - name: Release Beras
+        uses: softprops/action-gh-release@v1
+        with:
+          name: BERA release ${{ steps.dates.outputs.year }}-${{ steps.dates.outputs.month }}-${{ steps.dates.outputs.day }}
+          tag_name: bera-release-${{ steps.dates.outputs.year }}-${{ steps.dates.outputs.month }}-${{ steps.dates.outputs.day }}
+          files: |
+            *.pdf
+          fail_on_unmatched_files: false
