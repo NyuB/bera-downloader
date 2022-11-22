@@ -33,9 +33,9 @@ def main(massif: MassifArgument, year: int, month: int, day: int, output_name: s
     except Exception as e:
         print(e)
         if silent:
-            sys.exit(-1)
-        else:
             sys.exit(0)
+        else:
+            sys.exit(-1)
 
 if __name__ == "__main__":
     typer.run(main)

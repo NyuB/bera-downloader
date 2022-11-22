@@ -115,18 +115,18 @@ jobs:
           MONTH=${{ steps.dates.outputs.month }}
           DAY=${{ steps.dates.outputs.day }}
           DATE_SUFFIX=${YEAR}-${MONTH}-${DAY}
-          binaries/linux/bera-dl ARAVIS $YEAR $MONTH $DAY --output-name Arravis-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl BAUGES $YEAR $MONTH $DAY --output-name Bauges-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl BEAUFORTAIN $YEAR $MONTH $DAY --output-name Beaufortain-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl BELLEDONNE $YEAR $MONTH $DAY --output-name Belledonne-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl CHABLAIS $YEAR $MONTH $DAY --output-name Chablais-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl CHARTREUSE $YEAR $MONTH $DAY --output-name Chartreuse-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl HAUTE-MAURIENNE $YEAR $MONTH $DAY --output-name Haute-Maurienne-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl HAUTE-TARENTAISE $YEAR $MONTH $DAY --output-name Haute-Tarentaise-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl MAURIENNE $YEAR $MONTH $DAY --output-name Maurienne-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl VANOISE $YEAR $MONTH $DAY --output-name Vanoise-${DATE_SUFFIX}.pdf
-          binaries/linux/bera-dl VERCORS $YEAR $MONTH $DAY --output-name Vercors-${DATE_SUFFIX}.pdf
+          binaries/linux/bera-dl ARAVIS $YEAR $MONTH $DAY --output-name Arravis-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl BAUGES $YEAR $MONTH $DAY --output-name Bauges-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl BEAUFORTAIN $YEAR $MONTH $DAY --output-name Beaufortain-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl BELLEDONNE $YEAR $MONTH $DAY --output-name Belledonne-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl CHABLAIS $YEAR $MONTH $DAY --output-name Chablais-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl CHARTREUSE $YEAR $MONTH $DAY --output-name Chartreuse-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl HAUTE-MAURIENNE $YEAR $MONTH $DAY --output-name Haute-Maurienne-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl HAUTE-TARENTAISE $YEAR $MONTH $DAY --output-name Haute-Tarentaise-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl MAURIENNE $YEAR $MONTH $DAY --output-name Maurienne-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl VANOISE $YEAR $MONTH $DAY --output-name Vanoise-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl VERCORS $YEAR $MONTH $DAY --output-name Vercors-${DATE_SUFFIX}.pdf --silent
   
       - name: Release Beras
         uses: softprops/action-gh-release@v1
