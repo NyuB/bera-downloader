@@ -1,6 +1,7 @@
 from meteo_france_api import BERAClient, DateYMD
-import typer
 from enum import Enum
+import typer
+import sys
 
 class MassifArgument(Enum):
     ARRAVIS = "ARRAVIS"
@@ -16,12 +17,19 @@ class MassifArgument(Enum):
     def __repr__(self):
         return str(self)
 
-def main(massif: MassifArgument, year: int, month: int, day: int, output_name: str = typer.Option("BERA.pdf", help = "Path of the output file to write bera to")):
+def main(massif: MassifArgument, year: int, month: int, day: int, output_name: str = typer.Option("BERA.pdf", help = "Path of the output file to write bera to"), silent: bool = typer.Option(False, help = "Exit normally even when failing to retrieve the required BERA")):
     typer.echo("Getting BERA for {}".format(massif))
-    client = BERAClient()
-    bytes = client.get_latest_bera_for_massif_day(massif.value, DateYMD(year, month, day))
-    with open(output_name, 'wb') as file:
-        file.write(bytes)
+    try:
+        client = BERAClient()
+        bytes = client.get_latest_bera_for_massif_day(massif.value, DateYMD(year, month, day))
+        with open(output_name, 'wb') as file:
+            file.write(bytes)
+    except Exception as e:
+        print(e)
+        if silent:
+            sys.exit(-1)
+        else:
+            sys.exit(0)
 
 if __name__ == "__main__":
     typer.run(main)

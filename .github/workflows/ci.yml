@@ -111,7 +111,7 @@ jobs:
     - name: Release Beras
       uses: softprops/action-gh-release@v1
       with:
-        name: ${{ github.event.head_commit.message }}
+        name: BERA-${{ github.event.schedule }}
         tag_name: bera-release
         files: |
           *.pdf
