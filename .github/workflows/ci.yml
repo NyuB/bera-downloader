@@ -7,7 +7,7 @@ on:
     - 'README.md'
     - '.gitignore'
   schedule:
-    - cron: '30 17 * * *' # 17h30 UTC+1 <==> 18h30 CET
+    - cron: '0 17 * * *' # 17h UTC <==> 18h00 CET
 
 jobs:
   Tests:
@@ -72,7 +72,7 @@ jobs:
           path: ${{ matrix.binary }}
 
   Release-binary-and-BERA:
-    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '30 17 * * *'))
+    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '0 17 * * *'))
     needs: [Package]
     runs-on: ubuntu-latest
     steps:
