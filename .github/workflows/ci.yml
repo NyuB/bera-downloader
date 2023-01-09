@@ -8,6 +8,13 @@ on:
     - '.gitignore'
   schedule:
     - cron: '0 17 * * *' # 17h UTC <==> 18h00 CET
+  workflow_dispatch:
+    inputs:
+      beras:
+        type: boolean
+        required: true
+        default: false
+        description: "Release with BERAS of the day"
 
 jobs:
   Tests:
@@ -72,7 +79,7 @@ jobs:
           path: ${{ matrix.binary }}
 
   Release-binary-and-BERA:
-    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '0 17 * * *'))
+    if: (github.ref_name == 'master') && ((contains(github.event.head_commit.message, '[release]')) || (github.event.schedule == '0 17 * * *') || (inputs.beras))
     needs: [Package]
     runs-on: ubuntu-latest
     steps:
