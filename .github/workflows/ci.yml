@@ -125,6 +125,7 @@ jobs:
           binaries/linux/bera-dl HAUTE-TARENTAISE $YEAR $MONTH $DAY --output-name Haute-Tarentaise-${DATE_SUFFIX}.pdf --silent
           binaries/linux/bera-dl MAURIENNE $YEAR $MONTH $DAY --output-name Maurienne-${DATE_SUFFIX}.pdf --silent
           binaries/linux/bera-dl OISANS $YEAR $MONTH $DAY --output-name Oisans-${DATE_SUFFIX}.pdf --silent
+          binaries/linux/bera-dl QUEYRAS $YEAR $MONTH $DAY --output-name Queyras-${DATE_SUFFIX}.pdf --silent
           binaries/linux/bera-dl VANOISE $YEAR $MONTH $DAY --output-name Vanoise-${DATE_SUFFIX}.pdf --silent
           binaries/linux/bera-dl VERCORS $YEAR $MONTH $DAY --output-name Vercors-${DATE_SUFFIX}.pdf --silent
   
