@@ -6,8 +6,8 @@ on:
     paths-ignore:
     - 'README.md'
     - '.gitignore'
-  schedule:
-    - cron: '0 17 * * *' # 17h UTC <==> 18h00 CET
+  # schedule:
+  #   - cron: '0 17 * * *' # 17h UTC <==> 18h00 CET
   workflow_dispatch:
     inputs:
       beras:
